@@ -3,13 +3,15 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,42 +34,58 @@ public class StudentController {
     //http://localhost:8090/student/all
     @GetMapping("/all")
     @Operation(summary = "Encuentra todos los estudiantes")
-    public List<Student> mostrarEstudiantes() {
-        return studentService.SearchAll();
+    public ResponseEntity<List<Student>> mostrarEstudiantes() {
+
+        List<Student> lista = studentService.SearchAll();
+
+        ResponseEntity<List<Student>> response = new ResponseEntity<>(lista, HttpStatus.OK);
+        return response;
     }
 
-    // http://localhost:8080/student/find?id=1
+    // http://localhost:8090/student/find?id=1
     @GetMapping("/find")
-    public Student mostrarInfoEstudiante(@RequestParam("id") Long id) {
+    public ResponseEntity<Student> mostrarInfoEstudiante(@RequestParam("id") Long id) {
 
         Student student = studentService.SearchById(id);
 
-        return student;
+        return new ResponseEntity<Student>(student, HttpStatus.OK);
     }
 
-    // http://localhost:8080/student/find/1
+    // http://localhost:8090/student/find/1
     @GetMapping("/find/{id}")
-    public Student mostrarInfoEstudiante2(@PathVariable("id") Long id) {
+    public  ResponseEntity<Student> mostrarInfoEstudiante2(@PathVariable("id") Long id) {
         Student student = studentService.SearchById(id);
-        return student;
+        if (student == null) {
+            return new ResponseEntity<Student>(student, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Student>(student, HttpStatus.OK);
     }
 
+    // http://localhost:8090/student/add
     @PostMapping("/add")
-    public void agregarEstudiante(@RequestBody Student student){
-        studentService.add(student);
+    public ResponseEntity<Student> agregarEstudiante(@RequestBody Student student){
+        Student newStudent = studentService.add(student);
+        if(newStudent == null){
+            return new ResponseEntity<Student>(newStudent, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Student>(newStudent, HttpStatus.CREATED);
     }
 
     //delete
-    //http://localhost:8090/delete/1
+    //http://localhost:8090/student/delete/1
     @DeleteMapping("/delete/{id}")
-    public void eliminarEstudiante(@PathVariable("id") Long id){
+    public ResponseEntity<String> eliminarEstudiante(@PathVariable("id") Long id){
         studentService.deleteById(id);
+        return new ResponseEntity<>("DELETED",HttpStatus.NO_CONTENT);
     }
 
-
-    @PostMapping("/update/{id}")
-    public void actualizarEstudiante(@RequestBody Student student, @PathVariable("id") int id){
-        studentService.update(student);
+    //http://localhost:8090/student/update/1
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Student> actualizarEstudiante(@RequestBody Student student, @PathVariable("id") Long id){
+        Student studentFind = studentService.SearchById(id);
+        student.setId(studentFind.getId());
+        Student studentUpdated = studentService.update(student);
+        return new ResponseEntity<>(studentUpdated,HttpStatus.OK);
     }
 
 
