@@ -58,7 +58,6 @@ public class StudentControllerTest {
 
         response.andExpect(status().isCreated())
         .andExpect(content().contentType("application/json"))
-        //
         .andExpect(jsonPath("$.nombre").value("Juan"))
         .andExpect(jsonPath("$.carrera").value(student.getCarrera()));
     }
