@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.example.demo.model.Student;
@@ -8,6 +7,8 @@ import com.example.demo.model.Student;
 public interface StudentService {
     
     public Student SearchById(Long id);
+
+    public Student SearchByCorreo(String correo);
 
     public List<Student> SearchAll();
 

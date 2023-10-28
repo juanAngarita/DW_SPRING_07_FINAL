@@ -23,9 +23,30 @@ public class Teacher {
     private List<Student> students = new ArrayList<>();
 
     private String name;
-
-    public Teacher(String name) {
+    private String correo;
+    private String password;
+    
+    public Teacher(String name, String correo, String password) {
+        this.students = new ArrayList<>();
         this.name = name;
+        this.correo = correo;
+        this.password = password;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Teacher() {

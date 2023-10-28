@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -59,9 +58,9 @@ public class DatabaseInitTest implements ApplicationRunner {
         homeWorkRepository.save(new HomeWork("Proyecto final 2", "Terminar taller"));
 
         //Generacion profesores
-        teacherRepository.save(new Teacher("Anabel"));
-        teacherRepository.save(new Teacher("Pavlich"));
-        teacherRepository.save(new Teacher("Bustacara"));
+        teacherRepository.save(new Teacher("Anabel", "Anabel@javeriana.edu.co", "123456"));
+        teacherRepository.save(new Teacher("Pavlich", "Pavlich@javeriana.edu.co", "123456"));
+        teacherRepository.save(new Teacher("Bustacara", "Bustacara@javeriana.edu.co", "123456"));
 
         //Generacion de cursos
         courseRepository.save(new Course("BASES DE DATOS"));

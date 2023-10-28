@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Controller;
 
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.HomeWorkRepository;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.repository.TeacherRepository;
 
@@ -32,6 +32,9 @@ public class DatabaseInit implements ApplicationRunner {
 
     @Autowired
     CourseRepository courseRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -59,9 +62,9 @@ public class DatabaseInit implements ApplicationRunner {
         homeWorkRepository.save(new HomeWork("Proyecto final 2", "Terminar taller"));
 
         //Generacion profesores
-        teacherRepository.save(new Teacher("Anabel"));
-        teacherRepository.save(new Teacher("Pavlich"));
-        teacherRepository.save(new Teacher("Bustacara"));
+        teacherRepository.save(new Teacher("Anabel", "Anabel@javeriana.edu.co", "123456"));
+        teacherRepository.save(new Teacher("Pavlich", "Pavlich@javeriana.edu.co", "123456"));
+        teacherRepository.save(new Teacher("Bustacara", "Bustacara@javeriana.edu.co", "123456"));
 
         //Generacion de cursos
         courseRepository.save(new Course("BASES DE DATOS"));
@@ -91,7 +94,8 @@ public class DatabaseInit implements ApplicationRunner {
             course.setTeacher(teacher);
         }
 
-
+        roleRepository.save(new Role("USER"));
+        roleRepository.save(new Role("ADMIN"));
 
 
 

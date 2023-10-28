@@ -14,6 +14,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     //select * from student where Name = nombre
     Student findByNombre(String name);
 
+    Student findByCorreo(String correo);
+
     @Query("select s from Student s where s.id < 4")
     List<Student> findFirst3Students();
 

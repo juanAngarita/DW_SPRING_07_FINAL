@@ -51,6 +51,18 @@ public class StudentController {
         return new ResponseEntity<Student>(student, HttpStatus.OK);
     }
 
+    // http://localhost:8090/student/login?correo=prueba@postman.com
+    @GetMapping("/login")
+    public ResponseEntity<Student> loginEstudiante(@RequestParam("correo") String correo) {
+
+        System.out.println(correo);
+        Student student = studentService.SearchByCorreo(correo);
+        if (student == null) {
+            return new ResponseEntity<Student>(student, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Student>(student, HttpStatus.OK);
+    }
+
     // http://localhost:8090/student/find/1
     @GetMapping("/find/{id}")
     public  ResponseEntity<Student> mostrarInfoEstudiante2(@PathVariable("id") Long id) {
@@ -101,4 +113,6 @@ public class StudentController {
         model.addAttribute("estudiantes", studentService.findStudentsByHomework(type));
         return "mostrar_todos_estudiantes";
     }
+
+
 }

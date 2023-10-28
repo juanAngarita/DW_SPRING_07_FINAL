@@ -15,7 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Entity
 //@Table(name = "STUDENT")
@@ -26,6 +25,7 @@ public class Student {
     private String carrera;
     private int semestre;
     private String correo;
+    private String password;
 
     //nuevo
     @Id
@@ -57,6 +57,7 @@ public class Student {
         this.carrera = carrera;
         this.semestre = semestre;
         this.correo = correo;
+        this.password = "";
     }
 
     public Student () {

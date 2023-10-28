@@ -48,4 +48,9 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> findStudentsByHomework(String type) {
         return repo.findStudentsByTypeOfHomework(type);
     }
+
+    @Override
+    public Student SearchByCorreo(String correo) {
+        return repo.findByCorreo(correo);
+    }
 }
