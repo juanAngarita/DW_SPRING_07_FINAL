@@ -36,8 +36,8 @@ public class StudentRepositoryTest {
         studentRepository.save( new Student( "Juan3", "sistemas", 3, "juan3@juan"));
         studentRepository.save( new Student( "Juan4", "sistemas", 4, "juan4@juan"));
     
-        teacherRepository.save( new Teacher( "Pablo"));
-        teacherRepository.save( new Teacher( "Nicolas"));
+        teacherRepository.save( new Teacher( "Pablo", "Pablo@prueba.edu.co", "123456"));
+        teacherRepository.save( new Teacher( "Nicolas", "Nicolas@prueba.edu.co", "123456"));
 
         //asociar estudiante y profesor
         Student student = studentRepository.findById(1l).get();

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.Student;
 import com.example.demo.model.Teacher;
-import com.example.demo.model.UserEntity;
 import com.example.demo.service.TeacherService;
 
 @Controller
@@ -37,10 +36,10 @@ public class TeacherController {
 
     // http://localhost:8090/student/login?correo=prueba@postman.com
     @PostMapping("/login")
-    public ResponseEntity<Teacher> loginEstudiante(@RequestBody() UserEntity teacherUser) {
+    public ResponseEntity<Teacher> loginEstudiante(@RequestBody() Teacher teacher) {
 
-        Teacher teacher = teacherService.SearchByCorreo(teacherUser.getEmail());
-        if(teacher.getPassword().equals(teacherUser.getPassword())){
+        teacher = teacherService.SearchByCorreo(teacher.getCorreo());
+        if(teacher.getPassword().equals(teacher.getPassword())){
             return new ResponseEntity<Teacher>(teacher, HttpStatus.OK);
         }else{
             return new ResponseEntity<Teacher>(teacher, HttpStatus.BAD_REQUEST);
