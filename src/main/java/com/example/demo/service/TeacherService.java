@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Student;
 import com.example.demo.model.Teacher;
 
 public interface TeacherService {

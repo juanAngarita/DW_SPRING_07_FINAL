@@ -5,6 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Student;
+import com.example.demo.model.UserEntity;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.security.CustomUserDetailService;
+import com.example.demo.security.JWTGenerator;
 import com.example.demo.service.StudentService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +39,18 @@ public class StudentController {
 
     @Autowired
     StudentService studentService;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    CustomUserDetailService customUserDetailService;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    JWTGenerator jwtGenerator;
 
     //http://localhost:8090/student/all
     @GetMapping("/all")
@@ -52,11 +73,33 @@ public class StudentController {
     }
 
     // http://localhost:8090/student/login?correo=prueba@postman.com
-    @GetMapping("/login")
-    public ResponseEntity<Student> loginEstudiante(@RequestParam("correo") String correo) {
+    @PostMapping("/login")
+    public ResponseEntity loginEstudiante(@RequestBody Student student) {
+/* 
+        student = studentService.SearchByCorreo(student.getCorreo());
+        if (student == null) {
+            return new ResponseEntity<Student>(student, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Student>(student, HttpStatus.OK);
+        */
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(student.getCorreo(), "123"));
 
-        System.out.println(correo);
-        Student student = studentService.SearchByCorreo(correo);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = jwtGenerator.generateToken(authentication);
+
+        return new ResponseEntity<String>(token, HttpStatus.OK);
+    }
+
+    // http://localhost:8090/student/datails
+    @GetMapping("/details")
+    public ResponseEntity<Student> buscarEstudiante() {
+
+        Student student = studentService.SearchByCorreo(
+            SecurityContextHolder.getContext().getAuthentication().getName()
+        );
+
         if (student == null) {
             return new ResponseEntity<Student>(student, HttpStatus.NOT_FOUND);
         }
@@ -76,6 +119,20 @@ public class StudentController {
     // http://localhost:8090/student/add
     @PostMapping("/add")
     public ResponseEntity<Student> agregarEstudiante(@RequestBody Student student){
+        /*
+        Student newStudent = studentService.add(student);
+        if(newStudent == null){
+            return new ResponseEntity<Student>(newStudent, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Student>(newStudent, HttpStatus.CREATED);
+        */
+
+        if(userRepository.existsByUsername(student.getCorreo())) {
+            return new ResponseEntity<Student>(student, HttpStatus.BAD_REQUEST);
+        }
+
+        UserEntity userEntity = customUserDetailService.saveStudent(student);
+        student.setUser(userEntity);
         Student newStudent = studentService.add(student);
         if(newStudent == null){
             return new ResponseEntity<Student>(newStudent, HttpStatus.BAD_REQUEST);
